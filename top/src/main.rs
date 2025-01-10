@@ -9,6 +9,12 @@ fn main() -> io::Result<()> {
         std::process::exit(1);
     }
 
+    if &args[1] == "--version" {
+        let version = env!("CARGO_PKG_VERSION");
+        println!("App Version: {}", version);
+        std::process::exit(1);
+    }
+
     let filename: &String = &args[1];
     let lines_to_read: usize = args.get(2).and_then(|l| l.parse::<usize>().ok()).unwrap_or(10);
 
