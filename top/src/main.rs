@@ -4,14 +4,15 @@ use std::io::{self, BufRead, BufReader};
 
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        eprintln!("Usage: top <file> [lines]");
-        std::process::exit(1);
-    }
 
-    if &args[1] == "--version" {
+    if args.len() == 2 && &args[1] == "--version" {
         let version = env!("CARGO_PKG_VERSION");
         println!("App Version: {}", version);
+        std::process::exit(0);
+    }
+
+    if args.len() < 2 {
+        eprintln!("Usage: top <file> [lines]");
         std::process::exit(1);
     }
 
