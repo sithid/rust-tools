@@ -28,7 +28,7 @@ fn main() -> io::Result<()> {
     // Create a reference to the value of args[1] (the filename). We do not require ownership of the address in memory.
     let filename = &args[1];
 
-    // Parse the optional number of lines (args[2]) to read, defaulting to 10.
+    // Parse the optional starting line (args[2]) to read, defaulting to 10.
     let mut starting_line = args.get(2)
                             .and_then(|l| l.parse::<usize>().ok()) // Try to parse the string to usize, return None on error.
                             .unwrap_or(10);                        // Use 10 if the argument is missing or parsing fails.
