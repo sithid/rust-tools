@@ -49,7 +49,7 @@ fn main() -> io::Result<()> {
         }
 
         if numbered {
-            println!("{}:{}", i + 1, line?);   
+            println!("{}: {}", i + 1, line?);   
         } else {
             println!("{}", line?);
         }
