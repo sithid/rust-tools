@@ -19,20 +19,24 @@ fn main() -> io::Result<()> {
     // Verify that there are enough command line arguments supplied.
     // Display usage information and terminate immediately if no arguments are supplied.
     if args.len() < 2 {
-        eprintln!("Usage: top <file> [lines] Optional: --numbered");
+        eprintln!("Usage: bottom <file> [starting_line] Optional: --numbered");
         return Err(io::Error::new(io::ErrorKind::InvalidInput, "Not enough arguments"));
     }
 
-    // Look for the --numbered param to indicate we should display the line numbers.
-    let numbered = args.len() == 4 && &args[3] == "--numbered";
+    let numbered: bool = args.len() == 4 && &args[3] == "--numbered";
 
     // Create a reference to the value of args[1] (the filename). We do not require ownership of the address in memory.
     let filename = &args[1];
 
     // Parse the optional number of lines (args[2]) to read, defaulting to 10.
-    let lines_to_read = args.get(2)
+    let mut starting_line = args.get(2)
                             .and_then(|l| l.parse::<usize>().ok()) // Try to parse the string to usize, return None on error.
                             .unwrap_or(10);                        // Use 10 if the argument is missing or parsing fails.
+    
+    // Offset by 1 to make starting_line inclusive.
+    if starting_line > 0 {
+        starting_line = starting_line - 1;
+    }
 
     // Open the file in read-only mode.
     let file = File::open(filename)?;
@@ -40,12 +44,12 @@ fn main() -> io::Result<()> {
     // Initialize a reader using the opened file.
     let reader = BufReader::new(file);
 
-    println!("{} {} {}.\n\r", &args[0], &args[1], lines_to_read);
+    println!("{} {} {}.\n\r", &args[0], &args[1], starting_line);
 
     // Enumerate through each line of file and print the value read until we reach are lines_to_read limit.
     for (i, line) in reader.lines().enumerate() {
-        if i >= lines_to_read {
-            break;
+        if i < starting_line {
+             continue;
         }
 
         if numbered {
